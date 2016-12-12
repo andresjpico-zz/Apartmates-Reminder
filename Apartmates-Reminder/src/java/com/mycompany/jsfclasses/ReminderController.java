@@ -86,8 +86,8 @@ public class ReminderController {
             .withIdentity("trigger1", "group1")
             .startNow()
             .withSchedule(simpleSchedule()
-//                    .withIntervalInHours(1)
-                    .withIntervalInSeconds(10)
+                    .withIntervalInHours(1)
+//                    .withIntervalInSeconds(10)
                     .repeatForever())
             .build();
 

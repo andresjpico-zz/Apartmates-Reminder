@@ -11,10 +11,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import com.mycompany.entityclasses.Roommate;
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  *
