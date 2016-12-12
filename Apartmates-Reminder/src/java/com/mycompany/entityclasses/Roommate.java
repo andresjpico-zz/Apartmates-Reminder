@@ -1,5 +1,5 @@
 /*
- * Created by Andres Pico on 2016.12.11  * 
+ * Created by Andres Pico on 2016.12.12  * 
  * Copyright © 2016 Osman Balci. All rights reserved. * 
  */
 package com.mycompany.entityclasses;
