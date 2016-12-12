@@ -100,8 +100,8 @@ public class ReminderController implements Serializable {
                     String notificationTimestamp = formatter.format(timestamp);
                     
                     currentDateAndTime = currentTimestamp.substring(0, 13);
-//                    notificationDateAndTime = notificationTimestamp.substring(0, 13);
-                    notificationDateAndTime = currentTimestamp.substring(0, 13);
+                    notificationDateAndTime = notificationTimestamp.substring(0, 13);
+//                    notificationDateAndTime = currentTimestamp.substring(0, 13);
                     
                     if(currentDateAndTime.equals(notificationDateAndTime)) {
                         tasks.add(task);
