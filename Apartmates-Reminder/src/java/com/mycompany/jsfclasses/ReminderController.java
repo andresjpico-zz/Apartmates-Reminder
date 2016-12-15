@@ -65,11 +65,23 @@ public class ReminderController implements Serializable {
     }
     
     
-    
+    /*
+    -----------------------------------------------------
+    This is the constructor method invoked to instantiate
+    an object from the ReminderController class
+    -----------------------------------------------------
+     */
     public ReminderController() {
     
     }
     
+    /*
+    -----------------------------------------------------
+    This method is in charge of retrieving tasks that are
+    not complete, and which deadline/notifications match 
+    the current timestamp
+    -----------------------------------------------------
+     */
     public void startCourier() {
         
         statusMessage = "Service started";
@@ -87,24 +99,58 @@ public class ReminderController implements Serializable {
                 String date = "2016-12-11 22:30:00.000";
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String currentDateAndTime;
-                String notificationDateAndTime;
+                String firstNotificationDateAndTime = null;
+                String secondNotificationDateAndTime = null;
+                String thirdNotificationDateAndTime = null;
+                String firstNotificationTimestamp;
+                String secondNotificationTimestamp;
+                String thirdNotificationTimestamp;
                 List<Task> tasks = new ArrayList<>();
                 List<Task> tasksNotComplete;
+                Date timestamp;
+                Date deadlineTimestamp;
+                String deadline = null;
+                String deadlineDate = null;
+                String deadlineTime = null;
+
                 
-                // Compares current date and hour with the notification's date and hour
-                // If they are equal then the task under observation is added to the lisr 'tasks'
+                // Compares current date and hour with the notifications' date and hour
+                // If they are equal then the task under observation is added to the list 'tasks'
                 tasksNotComplete = roommateFacade.findNotCompletedTasks();
                 for(Task task : tasksNotComplete) {
                     
-                    Date timestamp = task.getTaskReminder1();
-                    String notificationTimestamp = formatter.format(timestamp);
+                    if(task.getTaskReminder1() != null) {
+                        timestamp = task.getTaskReminder1();
+                        firstNotificationTimestamp = formatter.format(timestamp);
+                        firstNotificationDateAndTime = firstNotificationTimestamp.substring(0, 13);
+//                        firstNotificationDateAndTime = currentTimestamp.substring(0, 13);
+                    }
+                        
+                    if(task.getTaskReminder2() != null) {
+                        timestamp = task.getTaskReminder2();
+                        secondNotificationTimestamp = formatter.format(timestamp);
+                        secondNotificationDateAndTime = secondNotificationTimestamp.substring(0, 13);
+                    }
                     
+                    if(task.getTaskReminder3() != null) {
+                        timestamp = task.getTaskReminder3();
+                        thirdNotificationTimestamp = formatter.format(timestamp);
+                        thirdNotificationDateAndTime = thirdNotificationTimestamp.substring(0, 13);
+                    }
+                    
+                    deadlineTimestamp = task.getTaskDeadline();
+                    deadline = formatter.format(deadlineTimestamp);
+                    deadlineDate = deadline.substring(0, 10);
+                    deadlineTime = deadline.substring(11, deadline.length());
+                    
+                    // Gets date and hour only
                     currentDateAndTime = currentTimestamp.substring(0, 13);
-                    notificationDateAndTime = notificationTimestamp.substring(0, 13);
-//                    notificationDateAndTime = currentTimestamp.substring(0, 13);
                     
-                    if(currentDateAndTime.equals(notificationDateAndTime)) {
-                        tasks.add(task);
+                    if(currentDateAndTime.equals(firstNotificationDateAndTime)
+                        || currentDateAndTime.equals(secondNotificationDateAndTime)
+                        || currentDateAndTime.equals(thirdNotificationDateAndTime)
+                        || currentDateAndTime.equals(deadline)) {
+                            tasks.add(task);
                     }
                 }
 
@@ -118,7 +164,7 @@ public class ReminderController implements Serializable {
                     for(Roommate roommate : roommates) {
                         roommateName = roommate.getFirstName() + " " + roommate.getLastName();
                         email = roommate.getEmail();
-                        sendEmail(roommateName, email, taskName);
+                        sendEmail(roommateName, email, taskName, deadline);
                     }
                 }
                 
@@ -133,17 +179,21 @@ public class ReminderController implements Serializable {
     }
     
     
-    /*
-    ======================================================
-    Create Email Sesion and Transport Email in HTML Format
-    ======================================================
+    /**
+     * This method sends a personalized email to Roommates notifying them of an upcoming deadling
+     * @param roommateName is the roommate's name
+     * @param email is the roommate's email
+     * @param taskName is the task's apartment ID
+     * @param deadline is the task's deadline
      */
-    public void sendEmail(String roommateName, String email, String taskName) {
+    public void sendEmail(String roommateName, String email, String taskName, String deadline) {
 
         String emailTo = email;
-        String emailCc = null;             // Contains comma separated multiple email addresses with no spaces
+        String emailCc = null;             
         String emailSubject = "Task reminder!";        
-        String emailBody = "Hello " + roommateName + "! This is a reminder that the deadline for task " + taskName + " is approaching";
+        String emailBody = "Hello " + roommateName + "! \n"
+                    + "This is a reminder that the deadline for task " + taskName + " is approaching. \n"
+                    + "The deadline is on: " + deadline;
         
         // Set Email Server Properties
         emailServerProperties = System.getProperties();

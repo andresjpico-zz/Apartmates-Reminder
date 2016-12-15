@@ -32,8 +32,8 @@ public class RoommateFacade extends AbstractFacade<Roommate> {
     }
     
     /**
-     * @param apartmentID is the apartmentID attribute (column) value of the Task
-     * @return object reference of the Task entity whose apartmentID is apartmentID
+     * @param apartmentID is the apartmentID attribute (column) value of the Roommate
+     * @return List<> of Roommates that share the apartmentID
      */
     public List<Roommate> findByApartmentID(int apartmentID) {
         if (em.createQuery("SELECT c FROM Roommate c WHERE c.apartmentID = :apartmentID")
@@ -48,9 +48,8 @@ public class RoommateFacade extends AbstractFacade<Roommate> {
     
     /**
      * @param apartmentID is the apartmentID attribute (column) value of the Task
-     * @return object reference of the Task entity whose apartmentID is apartmentID
+     * @return List<> of Tasks that share the apartmentID
      */
-    //ADD FILTER SO THAT IT ONLY RETRIEVES NOT COMPLETED TASKS
     public List<Task> findTaskByApartmentID(int apartmentID) {
         if (em.createQuery("SELECT c FROM Task c WHERE c.apartmentID = :apartmentID")
                 .setParameter("apartmentID", apartmentID)
@@ -63,33 +62,7 @@ public class RoommateFacade extends AbstractFacade<Roommate> {
     }
     
     /**
-     * @param currentTime is the username attribute (column) value of the customer
-     * @return object reference of the Customer entity whose username is username
-     */
-    public List<Task> findByReminderTime(Date currentTime) {
-        
-        List<Task> tasks = em.createQuery("SELECT c FROM Task c WHERE c.taskReminder1 = :currentTime")
-                .setParameter("currentTime", currentTime)
-                .getResultList();
-        
-        return tasks;
-    }
-    
-    /**
-     * @param taskIsComplete is the username attribute (column) value of the customer
-     * @return object reference of the Customer entity whose username is username
-     */
-    public List<Task> findByTaskCompleteness(String taskIsComplete) {
-        
-        List<Task> tasks = em.createQuery("SELECT c FROM Task c WHERE c.taskIsComplete = :taskIsComplete")
-                .setParameter("taskIsComplete", taskIsComplete)
-                .getResultList();
-        
-        return tasks;
-    }
-    
-    /**
-     * @return object reference of the Customer entity whose username is username
+     * @return List<> of Tasks that are not complete
      */
     public List<Task> findNotCompletedTasks() {
         
